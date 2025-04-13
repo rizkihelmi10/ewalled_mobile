@@ -39,7 +39,7 @@ const useWallet = (): WalletHookResult => {
       try {
         setLoading(true);
         const response = await axiosInstance.get<Wallet>(
-          `/wallets/${currentUser?.id}`,
+          `/api/wallets/${currentUser?.id}`,
         );
         setWallet(response.data); 
       } catch (err) {

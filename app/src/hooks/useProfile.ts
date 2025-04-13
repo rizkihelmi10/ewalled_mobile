@@ -2,11 +2,12 @@ import { useState } from "react";
 import axiosInstance from "../api/axiosinstance";
 
 interface UserProfile {
-  id: string;
-  name: string;
+  id: number;
   email: string;
+  username: string;
+  fullname: string;
   phoneNumber?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
 }
 
 interface UseProfileResult {

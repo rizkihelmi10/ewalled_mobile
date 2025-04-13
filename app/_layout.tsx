@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { useFonts } from 'expo-font';
@@ -10,6 +10,8 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AuthProvider, useAuth } from '@/app/src/context/AuthContext';
+import { ThemeProvider } from './src/context/ThemeContext';
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -23,14 +25,14 @@ function RootLayoutNav() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider>
       <Stack>
-        {/* {!isAuthenticated ? (
+        {!isAuthenticated ? (
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         ) : (
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        )} */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        )}
+        {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
       </Stack>
     </ThemeProvider>
   );

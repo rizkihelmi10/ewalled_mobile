@@ -8,10 +8,11 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/app/src/context/ThemeContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
+  const isDarkMode = useTheme();
   return (
     <Tabs
       screenOptions={{
@@ -25,12 +26,12 @@ export default function TabLayout() {
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparent background
+            backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.9)', // Semi-transparent background
             borderTopWidth: 0,
             height: 60,
           },
           android: {
-            backgroundColor: '#fff',
+            backgroundColor: isDarkMode ? '#000' : '#fff',
             elevation: 5, 
             height : 60
           },

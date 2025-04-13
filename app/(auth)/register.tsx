@@ -12,7 +12,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel } from "@/components/ui/checkbox";
 import { CheckIcon } from "@/components/ui/icon";
-import { StyleSheet, Image, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Image, Alert, ActivityIndicator, ScrollView, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { register } from '@/app/src/services/authServices';
@@ -20,7 +20,7 @@ import axios from 'axios';
 
 // Define your navigation types
 type RootStackParamList = {
-  Login: undefined;
+  login: undefined;
   Home: undefined;
   Register: undefined;
 };
@@ -107,7 +107,7 @@ const Register: React.FC = () => {
       Alert.alert(
         'Registration Successful',
         'Your account has been created successfully. Please login.',
-        [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
+        [{ text: 'OK', onPress: () => navigation.navigate('login') }]
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -130,211 +130,212 @@ const Register: React.FC = () => {
   });
 
   return (
-    <VStack className="w-full h-full mx-auto p-6 bg-white rounded-lg">
-      <Image
-        style={styles.logo}
-        source={require('@/assets/images/walledlogo.png')}
-      />
-      
-      {/* Full Name Field */}
-      <FormControl className="mb-4" isInvalid={!!errors.fullName}>
-        <FormControlLabel>
-          <FormControlLabelText className="text-sm font-medium">Full Name</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
-          <InputField
-            placeholder="Enter your full name"
-            value={fullName}
-            onChangeText={(text: string) => {
-              setFullName(text);
-              if (errors.fullName) {
-                const { fullName, ...rest } = errors;
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <VStack className="w-full h-full mx-auto p-6 bg-white rounded-lg">
+        <Image
+          style={styles.logo}
+          source={require('@/assets/images/walledlogo.png')}
+        />
+        
+        {/* Full Name Field */}
+        <FormControl className="mb-4" isInvalid={!!errors.fullName}>
+          <FormControlLabel>
+            <FormControlLabelText className="text-sm font-medium">Full Name</FormControlLabelText>
+          </FormControlLabel>
+          <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
+            <InputField
+              placeholder="Enter your full name"
+              value={fullName}
+              onChangeText={(text: string) => {
+                setFullName(text);
+                if (errors.fullName) {
+                  const { fullName, ...rest } = errors;
+                  setErrors(rest);
+                }
+              }}
+              className="px-3 py-2"
+            />
+          </Input>
+          {errors.fullName && (
+            <FormControlHelper>
+              <FormControlHelperText className="text-red-500">
+                {errors.fullName}
+              </FormControlHelperText>
+            </FormControlHelper>
+          )}
+        </FormControl>
+        
+        {/* Email Field */}
+        <FormControl className="mb-4" isInvalid={!!errors.email}>
+          <FormControlLabel>
+            <FormControlLabelText className="text-sm font-medium">Email</FormControlLabelText>
+          </FormControlLabel>
+          <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
+            <InputField
+              placeholder="Enter your email"
+              value={email}
+              onChangeText={(text: string) => {
+                setEmail(text);
+                if (errors.email) {
+                  const { email, ...rest } = errors;
+                  setErrors(rest);
+                }
+              }}
+              className="px-3 py-2"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </Input>
+          {errors.email && (
+            <FormControlHelper>
+              <FormControlHelperText className="text-red-500">
+                {errors.email}
+              </FormControlHelperText>
+            </FormControlHelper>
+          )}
+        </FormControl>
+        
+        {/* Username Field */}
+        <FormControl className="mb-4" isInvalid={!!errors.username}>
+          <FormControlLabel>
+            <FormControlLabelText className="text-sm font-medium">Username</FormControlLabelText>
+          </FormControlLabel>
+          <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
+            <InputField
+              placeholder="Enter your username"
+              value={username}
+              onChangeText={(text: string) => {
+                setUsername(text);
+                if (errors.username) {
+                  const { username, ...rest } = errors;
+                  setErrors(rest);
+                }
+              }}
+              className="px-3 py-2"
+              autoCapitalize="none"
+            />
+          </Input>
+          {errors.username && (
+            <FormControlHelper>
+              <FormControlHelperText className="text-red-500">
+                {errors.username}
+              </FormControlHelperText>
+            </FormControlHelper>
+          )}
+        </FormControl>
+        
+        {/* Phone Number Field */}
+        <FormControl className="mb-4" isInvalid={!!errors.phoneNumber}>
+          <FormControlLabel>
+            <FormControlLabelText className="text-sm font-medium">Phone Number</FormControlLabelText>
+          </FormControlLabel>
+          <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
+            <InputField
+              placeholder="Enter your phone number"
+              value={phoneNumber}
+              onChangeText={(text: string) => {
+                setPhoneNumber(text);
+                if (errors.phoneNumber) {
+                  const { phoneNumber, ...rest } = errors;
+                  setErrors(rest);
+                }
+              }}
+              className="px-3 py-2"
+              keyboardType="phone-pad"
+            />
+          </Input>
+          {errors.phoneNumber && (
+            <FormControlHelper>
+              <FormControlHelperText className="text-red-500">
+                {errors.phoneNumber}
+              </FormControlHelperText>
+            </FormControlHelper>
+          )}
+        </FormControl>
+        
+        {/* Password Field */}
+        <FormControl className="mb-4" isInvalid={!!errors.password}>
+          <FormControlLabel>
+            <FormControlLabelText className="text-sm font-medium">Password</FormControlLabelText>
+          </FormControlLabel>
+          <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
+            <InputField
+              placeholder="Enter your password"
+              value={password}
+              onChangeText={(text: string) => {
+                setPassword(text);
+                if (errors.password) {
+                  const { password, ...rest } = errors;
+                  setErrors(rest);
+                }
+              }}
+              secureTextEntry={true}
+              className="px-3 py-2"
+            />
+          </Input>
+          {errors.password && (
+            <FormControlHelper>
+              <FormControlHelperText className="text-red-500">
+                {errors.password}
+              </FormControlHelperText>
+            </FormControlHelper>
+          )}
+        </FormControl>
+        
+        {/* Terms Checkbox */}
+        <FormControl isInvalid={!!errors.terms} className="mb-4">
+          <Checkbox
+            value="terms"
+            isChecked={termsAccepted}
+            onChange={() => {
+              setTermsAccepted(!termsAccepted);
+              if (errors.terms) {
+                const { terms, ...rest } = errors;
                 setErrors(rest);
               }
             }}
-            className="px-3 py-2"
-          />
-        </Input>
-        {errors.fullName && (
-          <FormControlHelper>
-            <FormControlHelperText className="text-red-500">
-              {errors.fullName}
-            </FormControlHelperText>
-          </FormControlHelper>
-        )}
-      </FormControl>
-      
-      {/* Email Field */}
-      <FormControl className="mb-4" isInvalid={!!errors.email}>
-        <FormControlLabel>
-          <FormControlLabelText className="text-sm font-medium">Email</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
-          <InputField
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={(text: string) => {
-              setEmail(text);
-              if (errors.email) {
-                const { email, ...rest } = errors;
-                setErrors(rest);
-              }
-            }}
-            className="px-3 py-2"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </Input>
-        {errors.email && (
-          <FormControlHelper>
-            <FormControlHelperText className="text-red-500">
-              {errors.email}
-            </FormControlHelperText>
-          </FormControlHelper>
-        )}
-      </FormControl>
-      
-      {/* Username Field */}
-      <FormControl className="mb-4" isInvalid={!!errors.username}>
-        <FormControlLabel>
-          <FormControlLabelText className="text-sm font-medium">Username</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
-          <InputField
-            placeholder="Enter your username"
-            value={username}
-            onChangeText={(text: string) => {
-              setUsername(text);
-              if (errors.username) {
-                const { username, ...rest } = errors;
-                setErrors(rest);
-              }
-            }}
-            className="px-3 py-2"
-            autoCapitalize="none"
-          />
-        </Input>
-        {errors.username && (
-          <FormControlHelper>
-            <FormControlHelperText className="text-red-500">
-              {errors.username}
-            </FormControlHelperText>
-          </FormControlHelper>
-        )}
-      </FormControl>
-      
-      {/* Phone Number Field */}
-      <FormControl className="mb-4" isInvalid={!!errors.phoneNumber}>
-        <FormControlLabel>
-          <FormControlLabelText className="text-sm font-medium">Phone Number</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
-          <InputField
-            placeholder="Enter your phone number"
-            value={phoneNumber}
-            onChangeText={(text: string) => {
-              setPhoneNumber(text);
-              if (errors.phoneNumber) {
-                const { phoneNumber, ...rest } = errors;
-                setErrors(rest);
-              }
-            }}
-            className="px-3 py-2"
-            keyboardType="phone-pad"
-          />
-        </Input>
-        {errors.phoneNumber && (
-          <FormControlHelper>
-            <FormControlHelperText className="text-red-500">
-              {errors.phoneNumber}
-            </FormControlHelperText>
-          </FormControlHelper>
-        )}
-      </FormControl>
-      
-      {/* Password Field */}
-      <FormControl className="mb-4" isInvalid={!!errors.password}>
-        <FormControlLabel>
-          <FormControlLabelText className="text-sm font-medium">Password</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1 border border-gray-300 rounded-md bg-gray-100">
-          <InputField
-            placeholder="Enter your password"
-            value={password}
-            onChangeText={(text: string) => {
-              setPassword(text);
-              if (errors.password) {
-                const { password, ...rest } = errors;
-                setErrors(rest);
-              }
-            }}
-            secureTextEntry={true}
-            className="px-3 py-2"
-          />
-        </Input>
-        {errors.password && (
-          <FormControlHelper>
-            <FormControlHelperText className="text-red-500">
-              {errors.password}
-            </FormControlHelperText>
-          </FormControlHelper>
-        )}
-      </FormControl>
-      
-      {/* Terms Checkbox */}
-      <FormControl isInvalid={!!errors.terms} className="mb-4">
-        <Checkbox
-          value="terms"
-          isChecked={termsAccepted}
-          onChange={() => {
-            setTermsAccepted(!termsAccepted);
-            if (errors.terms) {
-              const { terms, ...rest } = errors;
-              setErrors(rest);
-            }
-          }}
-          className="flex-row items-center"
+            className="flex-row items-center"
+          >
+            <CheckboxIndicator className="mr-2">
+              <CheckboxIcon as={CheckIcon} />
+            </CheckboxIndicator>
+            <CheckboxLabel className="text-sm">
+              I have read and agree to the Terms and Conditions *
+            </CheckboxLabel>
+          </Checkbox>
+          {errors.terms && (
+            <FormControlHelper>
+              <FormControlHelperText className="text-red-500 ml-6">
+                {errors.terms}
+              </FormControlHelperText>
+            </FormControlHelper>
+          )}
+        </FormControl>
+        
+        {/* Register Button */}
+        <Button
+          className="w-full bg-[#19918F] rounded-md py-3 mb-4"
+          onPress={handleRegister}
+          disabled={isLoading}
         >
-          <CheckboxIndicator className="mr-2">
-            <CheckboxIcon as={CheckIcon} />
-          </CheckboxIndicator>
-          <CheckboxLabel className="text-sm">
-            I have read and agree to the Terms and Conditions *
-          </CheckboxLabel>
-        </Checkbox>
-        {errors.terms && (
-          <FormControlHelper>
-            <FormControlHelperText className="text-red-500 ml-6">
-              {errors.terms}
-            </FormControlHelperText>
-          </FormControlHelper>
-        )}
-      </FormControl>
-      
-      {/* Register Button */}
-      <Button
-        className="w-full bg-blue-600 rounded-md py-3 mb-4"
-        onPress={handleRegister}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <ButtonText className="text-white font-medium">Register</ButtonText>
-        )}
-      </Button>
-      
-      {/* Login Link */}
-      <Text className="text-center text-sm">
-        Have an account?{' '}
-        <Text
-          className="text-blue-600 font-medium"
-          onPress={() => navigation.navigate('Login')}
-        >
-          Login here
+          {isLoading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <ButtonText className="text-white font-medium">Register</ButtonText>
+          )}
+        </Button>
+        
+        {/* Login Link */}
+        <Text className="text-center text-sm">
+          Have an account?{' '}
+          <Pressable onPress={() => navigation.navigate('login')}>
+            <Text className="text-blue-600 font-medium text-center">
+              Login here
+            </Text>
+          </Pressable>
         </Text>
-      </Text>
-    </VStack>
+      </VStack>
+    </ScrollView>
   );
 };
 

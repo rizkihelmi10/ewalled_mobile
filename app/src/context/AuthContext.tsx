@@ -3,13 +3,17 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { API_BASE_URL } from '@/app/src/config';
+import useProfile from '../hooks/useProfile';
+
 
 
 type UserProfile = {
-  id: string;
-  name: string;
+  id: number;
   email: string;
-
+  username: string;
+  fullname: string;
+  avatarUrl: string | null;
+  phoneNumber: string;
 };
 
 
@@ -73,6 +77,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const { profile } = useProfile();
+
+  useEffect(() => {
+    if (profile) {
+      setCurrentUser(currentUser);
+    }
+  }, [profile]);
+
+  // Fetch user profile
+  const fetchProfile = async () => {
+    try {
+      const currentToken = token || await retrieveToken();
+      if (!currentToken) return;
+
+      const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
+        headers: {
+          Authorization: `Bearer ${currentToken}`,
+        },
+      });
+
+      if (response.data) {
+        setCurrentUser(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      // If token is invalid, log out
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        await logout();
+      }
+    }
+  };
 
   // Initialize auth state on app load
   useEffect(() => {
@@ -88,30 +123,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     initializeAuth();
   }, []);
-
-  // Fetch user profile
-  const fetchProfile = async () => {
-    try {
-      const currentToken = token || await retrieveToken();
-      if (!currentToken) return;
-
-      const response = await axios.get(`${API_BASE_URL}/api/user/profile`, {
-        headers: {
-          Authorization: `Bearer ${currentToken}`,
-        },
-      });
-
-      if (response.data) {
-        setCurrentUser(response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      // If token is invalid, log out
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        await logout();
-      }
-    }
-  };
 
   // Login function
   const login = async (newToken: string) => {
@@ -150,7 +161,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     </AuthContext.Provider>
   );
 }
-
 // Custom hook
 export const useAuth = () => useContext(AuthContext);
 
