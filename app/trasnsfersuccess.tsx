@@ -6,7 +6,7 @@ import { CheckCircle, Printer } from 'lucide-react-native';
 type TransferSuccessPageProps = {
   transaction: {
     amount: number;
-    transactionId: string;
+    transactionId: number;
     fromName: string;
     toName: string;
     description: string;

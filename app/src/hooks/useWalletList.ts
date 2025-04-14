@@ -32,7 +32,7 @@ const useWalletList = (): UseWalletListResult => {
     try {
       setLoading(true);
       const response = await axiosInstance.get<Wallet[]>(
-        `/wallets/availability/${currentUser?.id}`,
+        `/api/wallets/availability/${currentUser?.id}`,
       );
       setWalletsList(response.data);
     } catch (err) {

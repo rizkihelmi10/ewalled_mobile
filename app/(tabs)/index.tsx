@@ -39,9 +39,13 @@ export default function HomeScreen() {
   const { logout, currentUser } = useAuth();
   const navigation = useNavigation<LoginScreenNavigationProp>();
   const colorScheme = useColorScheme();
-  const wallet = useWallet();
-  const ballance = formatBalance(wallet.wallet?.balance ?? 0);
+  const {wallet} = useWallet();
+  const ballance = formatBalance(wallet?.balance ?? 0);
+  const account = wallet?.accountNumber ?? '';
+  console.log(wallet);
   console.log(ballance);
+  console.log("Account number:", account); 
+  
   // const toggleDarkMode = () => {
   //   setIsDarkMode(prev => !prev);
   // };
@@ -125,7 +129,7 @@ export default function HomeScreen() {
           {/* Account Number */}
           <View className="mt-5 flex-row bg-[#19918F] justify-between items-center px-4 py-2 rounded-lg w-full">
             <Text className="text-white text-xl">Account No.</Text>
-            <Text className="text-white text-xl text-right">100899</Text>
+            <Text className="text-white text-xl text-right">{account}</Text>
           </View>
 
           {/* Balance Section */}

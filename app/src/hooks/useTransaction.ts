@@ -9,6 +9,7 @@ interface Transaction {
   description: string;
   date: string;
   type: string;
+  isIncome: boolean;
 
 }
 
@@ -35,7 +36,7 @@ const useTransactions = (): TransactionsHookResult => {
       try {
         setLoading(true);
         const response = await axiosInstance.get<Transaction[]>(
-          `/transactions?walletId=${currentUser?.id}`,
+          `/api/transactions?walletId=${currentUser?.id}`,
         );
         setTransactions(response.data);
       } catch (err) {

@@ -14,6 +14,7 @@ type UserProfile = {
   fullname: string;
   avatarUrl: string | null;
   phoneNumber: string;
+  accountNumber:number;
 };
 
 

@@ -21,9 +21,14 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ categories }) => {
 
   let cumulativePercent = 0;
 
+  // Get the max category for center display
+  const maxIndex = data.indexOf(Math.max(...data));
+  const maxPercentage = ((data[maxIndex] / total) * 100).toFixed(1);
+  const maxLabel = labels[maxIndex];
+
   return (
     <View style={styles.container}>
-      <Svg width={200} height={200}>
+      <Svg width={200} height={200} style={styles.svg}>
         {data.map((value, index) => {
           const percentage = value / total;
           const strokeDashoffset = circumference * (1 - percentage);
@@ -41,7 +46,8 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ categories }) => {
               strokeDashoffset={strokeDashoffset}
               rotation={rotation}
               origin={`${center}, ${center}`}
-              strokeLinecap="butt"
+              strokeLinecap="round"
+              fill="none"
             />
           );
 
@@ -52,10 +58,8 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ categories }) => {
 
       {/* Center label */}
       <View style={styles.centerText}>
-        <Text style={styles.percentageText}>
-          {((data[0] / total) * 100).toFixed(1)}%
-        </Text>
-        <Text style={styles.labelText}>{labels[0]}</Text>
+        <Text style={styles.percentageText}>{maxPercentage}%</Text>
+        <Text style={styles.labelText}>{maxLabel}</Text>
       </View>
     </View>
   );
@@ -65,7 +69,11 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    height: 220,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  svg: {
+    backgroundColor: 'transparent',
   },
   centerText: {
     position: "absolute",
@@ -73,13 +81,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   percentageText: {
-    fontWeight: "bold",
-    fontSize: 18,
-    color: "#333",
+    fontWeight: "700",
+    fontSize: 22,
+    color: "#111827", // dark text for contrast
   },
   labelText: {
-    fontSize: 12,
-    color: "#666",
+    fontSize: 14,
+    color: "#6B7280", // muted gray
+    marginTop: 2,
   },
 });
 

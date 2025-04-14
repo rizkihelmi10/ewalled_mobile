@@ -4,10 +4,13 @@ import axiosInstance from "../api/axiosinstance";
 
 
 interface Wallet {
-  id: string;
+  id: number; // 👈 change from string to number
+  userId: number;
   balance: number;
-  currency: string;
-
+  currency?: string; // optional, since it's not in the response
+  accountNumber: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface User {
@@ -38,11 +41,10 @@ const useWallet = (): WalletHookResult => {
     const fetchWallet = async (): Promise<void> => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get<Wallet>(
-          `/api/wallets/${currentUser?.id}`,
-        );
-        setWallet(response.data); 
-      } catch (err) {
+        const walletData: Wallet = await axiosInstance.get(`/api/wallets/${currentUser?.id}`);
+        console.log("Fetched Wallet:", walletData);
+        setWallet(walletData); 
+      }  catch (err) {
         setError(err instanceof Error ? err : new Error('An unknown error occurred'));
       } finally {
         setLoading(false);
