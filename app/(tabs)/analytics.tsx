@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import DoughnutChart from '@/components/DoughnutChart';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableData,
-} from "@/components/ui/table";
 import { useTheme } from '@/app/src/context/ThemeContext';
 import useTransactions from '@/app/src/hooks/useTransaction';
 import {
@@ -22,6 +14,7 @@ interface DisplayTransaction {
   category?: string;
   isIncome: boolean;
   transactionType?: string;
+  recipientName?: string;
 }
 
 interface ChartData {
@@ -57,7 +50,15 @@ const AnalyticsScreen = () => {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-GB', {
-      day: '2-digit', month: 'short', year: 'numeric'
+      day: '2-digit', month: 'long', year: 'numeric'
+    });
+  };
+
+  const formatAmount = (amount: number) => {
+    return amount.toLocaleString('id-ID', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     });
   };
 
@@ -81,42 +82,37 @@ const AnalyticsScreen = () => {
         <View className="w-full p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl shadow-sm">
           <Text className="text-xl font-semibold mb-3 dark:text-white">Transaction History</Text>
 
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-100 dark:bg-gray-700">
-                <TableHead className="text-gray-700 dark:text-gray-200">Date</TableHead>
-                <TableHead className="text-gray-700 dark:text-gray-200">Type</TableHead>
-                <TableHead className="text-gray-700 dark:text-gray-200">Amount</TableHead>
-                <TableHead className="text-gray-700 dark:text-gray-200">Category</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions && transactions.length > 0 ? (
-                transactions.map((transaction: DisplayTransaction, index: number) => (
-                  <TableRow key={index} className={`${index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'}`}>
-                    <TableData className="text-gray-800 dark:text-gray-200">
-                      {formatDate(transaction.date)}
-                    </TableData>
-                    <TableData className="text-gray-600 dark:text-gray-300 capitalize">
-                      {transaction.transactionType || "N/A"}
-                    </TableData>
-                    <TableData className={transaction.isIncome ? 'text-green-500' : 'text-red-500'}>
-                      {transaction.isIncome ? '+' : '-'}${transaction.amount.toLocaleString()}
-                    </TableData>
-                    <TableData className="text-gray-800 dark:text-gray-200">
-                      {transaction.category || 'Others'}
-                    </TableData>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableData className="text-center text-gray-500 py-5">
-                    No transactions found.
-                  </TableData>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <View className="space-y-4">
+            {transactions && transactions.length > 0 ? (
+              transactions.map((transaction: DisplayTransaction, index: number) => (
+                <View 
+                  key={index} 
+                  className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}
+                >
+                  <View className="flex-row justify-between items-start">
+                    <View>
+                      <Text className={`font-semibold ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                        {transaction.recipientName || 'N/A'}
+                      </Text>
+                      <Text className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
+                        {transaction.transactionType || "N/A"}
+                      </Text>
+                    </View>
+                    <Text className={transaction.isIncome ? 'text-green-500' : 'text-red-500'}>
+                      {transaction.isIncome ? '+' : '-'}{formatAmount(transaction.amount)}
+                    </Text>
+                  </View>
+                  <Text className={`text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    {formatDate(transaction.date)}
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <Text className="text-center text-gray-500 py-5">
+                No transactions found.
+              </Text>
+            )}
+          </View>
         </View>
       </View>
     </ScrollView>

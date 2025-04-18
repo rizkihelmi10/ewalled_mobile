@@ -1,0 +1,39 @@
+{
+  "cli": {
+    "version": ">= 16.3.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "REACT_NATIVE_CAMERA_ANDROID_FLAVOR": "general"
+        }
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "REACT_NATIVE_CAMERA_ANDROID_FLAVOR": "general"
+        }
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "android": {
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "REACT_NATIVE_CAMERA_ANDROID_FLAVOR": "general"
+        }
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormControl } from "@/components/ui/form-control";
 import {
   FormControlLabel,
@@ -23,6 +23,8 @@ type RootStackParamList = {
   login: undefined;
   Home: undefined;
   Register: undefined;
+  tnc: undefined;
+  '(auth)': undefined;
 };
 
 type RegisterScreenNavigationProp = NativeStackNavigationProp<
@@ -42,12 +44,22 @@ const Register: React.FC = () => {
   
   const navigation = useNavigation<RegisterScreenNavigationProp>();
 
+  useEffect(() => {
+    if (/\d/.test(fullName)) {
+      Alert.alert('Invalid Input', 'Full name cannot contain numbers');
+      setFullName(fullName.replace(/\d/g, ''));
+    }
+  }, [fullName]);
+
   const validateForm = (): boolean => {
     const newErrors: {[key: string]: string | undefined} = {};
     let isValid = true;
     
     if (!fullName) {
       newErrors.fullName = 'Full name is required';
+      isValid = false;
+    } else if (/\d/.test(fullName)) {
+      newErrors.fullName = 'Full name cannot contain numbers';
       isValid = false;
     }
     
@@ -69,6 +81,9 @@ const Register: React.FC = () => {
     
     if (!phoneNumber) {
       newErrors.phoneNumber = 'Phone number is required';
+      isValid = false;
+    } else if (phoneNumber.length < 10 || phoneNumber.length > 13) {
+      newErrors.phoneNumber = 'Phone number must be between 10 and 13 digits';
       isValid = false;
     }
     
@@ -234,14 +249,18 @@ const Register: React.FC = () => {
               placeholder="Enter your phone number"
               value={phoneNumber}
               onChangeText={(text: string) => {
-                setPhoneNumber(text);
-                if (errors.phoneNumber) {
-                  const { phoneNumber, ...rest } = errors;
-                  setErrors(rest);
+                const numericText = text.replace(/[^0-9]/g, '');
+                if (numericText.length <= 13) {
+                  setPhoneNumber(numericText);
+                  if (errors.phoneNumber) {
+                    const { phoneNumber, ...rest } = errors;
+                    setErrors(rest);
+                  }
                 }
               }}
               className="px-3 py-2"
               keyboardType="phone-pad"
+              maxLength={13}
             />
           </Input>
           {errors.phoneNumber && (
@@ -253,7 +272,6 @@ const Register: React.FC = () => {
           )}
         </FormControl>
         
-        {/* Password Field */}
         <FormControl className="mb-4" isInvalid={!!errors.password}>
           <FormControlLabel>
             <FormControlLabelText className="text-sm font-medium">Password</FormControlLabelText>
@@ -300,7 +318,11 @@ const Register: React.FC = () => {
               <CheckboxIcon as={CheckIcon} />
             </CheckboxIndicator>
             <CheckboxLabel className="text-sm">
-              I have read and agree to the Terms and Conditions *
+
+              I have read and agree to the{' '}
+              <Pressable onPress={() => navigation.navigate('tnc')}>
+                <Text className="text-blue-600 font-medium">Terms and Conditions</Text>
+              </Pressable>{' '}*
             </CheckboxLabel>
           </Checkbox>
           {errors.terms && (
@@ -328,7 +350,7 @@ const Register: React.FC = () => {
         {/* Login Link */}
         <Text className="text-center text-sm">
           Have an account?{' '}
-          <Pressable onPress={() => navigation.navigate('login')}>
+          <Pressable onPress={() => navigation.navigate('(auth)')}>
             <Text className="text-blue-600 font-medium text-center">
               Login here
             </Text>

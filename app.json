@@ -4,7 +4,7 @@
     "slug": "ewalled_mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/walledlogo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -15,6 +15,15 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.walled.walled_mobile",
+      "config": {
+        "reactNativeCamera": {
+          "flavor": "general"
+        }
       }
     },
     "web": {
@@ -34,22 +43,25 @@
         }
       ],
       [
-        "expo-barcode-scanner",
+        "expo-build-properties",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
-        }
-      ],
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
-          "recordAudioAndroid": true
+          "android": {
+            "kotlinVersion": "1.8.0",
+            "javaVersion": "17",
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          }
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "76185986-1c3b-4d09-8a6d-fbc14be6ab4e"
+      }
     }
   }
 }

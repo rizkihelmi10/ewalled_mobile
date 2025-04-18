@@ -19,6 +19,7 @@ SplashScreen.preventAutoHideAsync();
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const { isLoading, isAuthenticated } = useAuth();
+  console.log('isAuthenticated:', isAuthenticated); 
 
   if (isLoading) {
     return null; // Or a loading spinner
@@ -34,6 +35,7 @@ function RootLayoutNav() {
         )}
         {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
       </Stack>
+
     </ThemeProvider>
   );
 }
